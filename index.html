@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>记忆力训练 - 网页版</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- 加载页面 -->
+        <div id="loading" class="loading-screen">
+            <div class="loading-content">
+                <div class="brain-icon">🧠</div>
+                <h1>记忆力训练</h1>
+                <div class="loading-spinner"></div>
+                <p>正在加载...</p>
+            </div>
+        </div>
+
+        <!-- 登录页面 -->
+        <div id="login-page" class="page hidden">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <div class="brain-icon">🧠</div>
+                        <h1>记忆力训练</h1>
+                        <p>登录您的账户</p>
+                    </div>
+                    
+                    <form id="login-form" class="auth-form">
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="login-email" placeholder="邮箱地址" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="login-password" placeholder="密码" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('login-password')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        
+                        <button type="submit" class="auth-button">
+                            <span>登录</span>
+                            <div class="spinner hidden"></div>
+                        </button>
+                    </form>
+                    
+                    <div class="auth-links">
+                        <a href="#" onclick="showForgotPassword()">忘记密码？</a>
+                        <a href="#" onclick="showRegister()">创建新账户</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 注册页面 -->
+        <div id="register-page" class="page hidden">
+            <div class="auth-container">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <button class="back-button" onclick="showLogin()">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <div class="brain-icon">🧠</div>
+                        <h1>创建账户</h1>
+                        <p>开始您的记忆力训练之旅</p>
+                    </div>
+                    
+                    <form id="register-form" class="auth-form">
+                        <div class="input-group">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="register-name" placeholder="姓名" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="register-email" placeholder="邮箱地址" required>
+                        </div>
+                        
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="register-password" placeholder="密码" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('register-password')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="input-group">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="register-confirm-password" placeholder="确认密码" required>
+                            <button type="button" class="password-toggle" onclick="togglePassword('register-confirm-password')">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="input-group">
+                            <i class="fas fa-birthday-cake"></i>
+                            <input type="number" id="register-age" placeholder="年龄" min="1" max="120" required>
+                        </div>
+                        
+                        <div class="mode-selection">
+                            <label>选择训练模式：</label>
+                            <div class="mode-buttons">
+                                <button type="button" class="mode-button active" data-mode="young">
+                                    <i class="fas fa-bolt"></i>
+                                    年轻人模式
+                                </button>
+                                <button type="button" class="mode-button" data-mode="elder">
+                                    <i class="fas fa-heart"></i>
+                                    老年人模式
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="auth-button">
+                            <span>创建账户</span>
+                            <div class="spinner hidden"></div>
+                        </button>
+                    </form>
+                    
+                    <div class="auth-links">
+                        <a href="#" onclick="showLogin()">已有账户？立即登录</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主应用页面 -->
+        <div id="main-app" class="page hidden">
+            <!-- 顶部导航 -->
+            <nav class="top-nav">
+                <div class="nav-left">
+                    <div class="brain-icon">🧠</div>
+                    <h2>记忆力训练</h2>
+                </div>
+                <div class="nav-right">
+                    <button class="nav-button" onclick="showProfile()">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <button class="nav-button" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </nav>
+
+            <!-- 主内容区域 -->
+            <main class="main-content">
+                <!-- 首页 -->
+                <div id="home-page" class="content-page">
+                    <div class="welcome-section">
+                        <h1>欢迎回来，<span id="user-name">用户</span>！</h1>
+                        <p>今天也要坚持训练，提升记忆力哦！</p>
+                    </div>
+
+                    <div class="quick-stats">
+                        <div class="stat-card">
+                            <i class="fas fa-trophy"></i>
+                            <div class="stat-info">
+                                <span class="stat-value" id="total-score">0</span>
+                                <span class="stat-label">总分</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-gamepad"></i>
+                            <div class="stat-info">
+                                <span class="stat-value" id="total-games">0</span>
+                                <span class="stat-label">游戏次数</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-fire"></i>
+                            <div class="stat-info">
+                                <span class="stat-value" id="streak">0</span>
+                                <span class="stat-label">连续天数</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mode-selection-large">
+                        <h2>选择训练模式</h2>
+                        <div class="mode-cards">
+                            <div class="mode-card" onclick="selectMode('elder')">
+                                <div class="mode-icon">👴</div>
+                                <h3>老年人模式</h3>
+                                <p>简单易学，循序渐进</p>
+                                <ul>
+                                    <li>大字体界面</li>
+                                    <li>语音提示</li>
+                                    <li>慢节奏设计</li>
+                                </ul>
+                            </div>
+                            <div class="mode-card" onclick="selectMode('young')">
+                                <div class="mode-icon">⚡</div>
+                                <h3>年轻人模式</h3>
+                                <p>挑战自我，突破极限</p>
+                                <ul>
+                                    <li>快速反应</li>
+                                    <li>竞技元素</li>
+                                    <li>数据分析</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 游戏选择页面 -->
+                <div id="games-page" class="content-page hidden">
+                    <div class="page-header">
+                        <button class="back-button" onclick="showHome()">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2 id="mode-title">游戏选择</h2>
+                    </div>
+
+                    <div class="games-grid" id="games-grid">
+                        <!-- 游戏卡片将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+
+                <!-- 游戏页面 -->
+                <div id="game-page" class="content-page hidden">
+                    <div class="game-header">
+                        <button class="back-button" onclick="showGames()">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2 id="game-title">游戏</h2>
+                        <div class="game-stats">
+                            <span id="game-score">0</span>
+                            <span id="game-level">1</span>
+                        </div>
+                    </div>
+
+                    <div class="game-container">
+                        <div id="game-area">
+                            <!-- 游戏内容将在这里显示 -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 统计页面 -->
+                <div id="stats-page" class="content-page hidden">
+                    <div class="page-header">
+                        <button class="back-button" onclick="showHome()">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>统计信息</h2>
+                    </div>
+
+                    <div class="stats-container">
+                        <div class="stats-overview">
+                            <div class="stat-item">
+                                <i class="fas fa-chart-line"></i>
+                                <div>
+                                    <h3>平均分数</h3>
+                                    <p id="avg-score">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-star"></i>
+                                <div>
+                                    <h3>最高分数</h3>
+                                    <p id="best-score">0</p>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-clock"></i>
+                                <div>
+                                    <h3>训练时间</h3>
+                                    <p id="total-time">0分钟</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-container">
+                            <h3>每周进度</h3>
+                            <canvas id="progress-chart"></canvas>
+                        </div>
+
+                        <div class="achievements">
+                            <h3>成就</h3>
+                            <div class="achievements-grid" id="achievements-grid">
+                                <!-- 成就将通过JavaScript动态生成 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 个人资料页面 -->
+                <div id="profile-page" class="content-page hidden">
+                    <div class="page-header">
+                        <button class="back-button" onclick="showHome()">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h2>个人资料</h2>
+                    </div>
+
+                    <div class="profile-container">
+                        <div class="profile-info">
+                            <div class="profile-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h3 id="profile-name">用户名</h3>
+                            <p id="profile-email">user@example.com</p>
+                        </div>
+
+                        <div class="profile-stats">
+                            <div class="profile-stat">
+                                <span class="stat-label">等级</span>
+                                <span class="stat-value" id="profile-level">初级</span>
+                            </div>
+                            <div class="profile-stat">
+                                <span class="stat-label">加入时间</span>
+                                <span class="stat-value" id="profile-join-date">2024-01-01</span>
+                            </div>
+                            <div class="profile-stat">
+                                <span class="stat-label">训练天数</span>
+                                <span class="stat-value" id="profile-training-days">0</span>
+                            </div>
+                        </div>
+
+                        <div class="settings">
+                            <h3>设置</h3>
+                            <div class="setting-item">
+                                <span>通知</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="notifications-toggle" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <span>声音</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="sound-toggle" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="setting-item">
+                                <span>震动</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="haptic-toggle" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html> 
